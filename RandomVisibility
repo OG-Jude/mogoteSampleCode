@@ -1,0 +1,45 @@
+using UnityEngine;
+
+public class SelectiveChildVisibility : MonoBehaviour
+{
+    [SerializeField] private GameObject[] eligibleChildren; // Manually assign eligible children
+    [SerializeField] private int visibleCount = 1; // Number of children to make visible
+
+    private void Start()
+    {
+        // Validate the visible count
+        if (visibleCount > eligibleChildren.Length || visibleCount < 0)
+        {
+            Debug.LogWarning("Visible count is invalid. Setting it to 1.");
+            visibleCount = 1;
+        }
+
+        // Randomly set visibility
+        SetRandomVisibility();
+    }
+
+    private void SetRandomVisibility()
+    {
+        // Shuffle the eligible children array
+        ShuffleArray(eligibleChildren);
+
+        // Set visibility based on the visibleCount
+        for (int i = 0; i < eligibleChildren.Length; i++)
+        {
+            eligibleChildren[i].SetActive(i < visibleCount);
+        }
+    }
+
+    private void ShuffleArray<T>(T[] array)
+    {
+        // Fisher-Yates shuffle algorithm
+        int n = array.Length;
+        while (n > 1)
+        {
+            int k = Random.Range(0, n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
+    }
+}
